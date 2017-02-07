@@ -10,12 +10,33 @@ import UIKit
 import MapKit
 import CoreLocation
 
-class ViewController: UIViewController, MKLocalSearchCompleterDelegate {
+class ViewController: UIViewController, MKLocalSearchCompleterDelegate, CLLocationManagerDelegate {
+    
+    let locationManager = CLLocationManager()
     
     @IBOutlet var resultsView: UITextView!
     
     @IBOutlet var textField: UITextField!
     
+    @IBAction func locationTapped(_ sender: UIButton) {
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let coordinates = locations.first!.coordinate
+        makeRequestWithCoordinate(coordinates) { (name) in
+            DispatchQueue.main.async {
+                self.resultsView.text = name
+            }
+        }
+    }
+    
+
     @IBAction func suggestTapped(_ sender: UIButton) {
         let request = MKLocalSearchCompleter()
         request.delegate = self
@@ -76,6 +97,11 @@ class ViewController: UIViewController, MKLocalSearchCompleterDelegate {
                 print(error.localizedDescription)
             }
         }.resume()
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        locationManager.delegate = self
     }
 }
 
