@@ -60,10 +60,18 @@
                                     <action selector="locationTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Oq7-ae-A2U"/>
                                 </connections>
                             </button>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="m71-sQ-AeU">
+                                <rect key="frame" x="44" y="28" width="280" height="245"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="Ruc-JY-E6I"/>
+                                </connections>
+                            </mapView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <connections>
+                        <outlet property="mapView" destination="m71-sQ-AeU" id="Aeo-i0-Z2E"/>
                         <outlet property="resultsView" destination="rOX-fR-WMh" id="l9y-GN-iIl"/>
                         <outlet property="textField" destination="gsw-cp-bIO" id="yaf-Qf-Jnz"/>
                     </connections>

@@ -14,8 +14,8 @@ class ViewController: UIViewController, MKLocalSearchCompleterDelegate, CLLocati
     
     let locationManager = CLLocationManager()
     
+    @IBOutlet var mapView: MKMapView!
     @IBOutlet var resultsView: UITextView!
-    
     @IBOutlet var textField: UITextField!
     
     @IBAction func locationTapped(_ sender: UIButton) {
@@ -32,6 +32,12 @@ class ViewController: UIViewController, MKLocalSearchCompleterDelegate, CLLocati
         makeRequestWithCoordinate(coordinates) { (name) in
             DispatchQueue.main.async {
                 self.resultsView.text = name
+                let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+                let region = MKCoordinateRegion(center: coordinates, span: span)
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = coordinates
+                self.mapView.addAnnotation(annotation)
+                self.mapView.setRegion(region, animated: true)
             }
         }
     }
@@ -58,8 +64,15 @@ class ViewController: UIViewController, MKLocalSearchCompleterDelegate, CLLocati
         search.start { (_response, _error) in
             if let response  = _response {
                 let firstResult = response.mapItems.first!
-                let coordinates = firstResult.placemark.location?.coordinate
-                self.makeRequestWithCoordinate(coordinates!, completion: { (name) in
+                let coordinates = firstResult.placemark.location!.coordinate
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = coordinates
+                self.mapView.addAnnotation(annotation)
+                let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+                let region = MKCoordinateRegion(center: coordinates, span: span)
+                self.mapView.setRegion(region, animated: true)
+                
+                self.makeRequestWithCoordinate(coordinates, completion: { (name) in
                     DispatchQueue.main.async {
                         self.resultsView.text = name
                     }
