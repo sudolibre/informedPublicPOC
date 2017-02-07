@@ -10,13 +10,22 @@ import UIKit
 import MapKit
 import CoreLocation
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, MKLocalSearchCompleterDelegate {
     
     @IBOutlet var resultsView: UITextView!
     
     @IBOutlet var textField: UITextField!
     
     @IBAction func suggestTapped(_ sender: UIButton) {
+        let request = MKLocalSearchCompleter()
+        request.delegate = self
+        request.queryFragment = textField.text!
+    }
+    
+    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        resultsView.text = completer.results.reduce("", { (accum, completer) -> String in
+            return accum + "\(completer.title) \n"
+        })
     }
     
     @IBAction func searchTapped(_ sender: UIButton) {
